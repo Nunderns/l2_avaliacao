@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "34e7ca71-f34a-4630-9516-40886ca84d6a",
+		"name": "packaging",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42429620"
+	},
+	"item": [
+		{
+			"name": "Post - packaging",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/packaging?orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"packaging"
+					],
+					"query": [
+						{
+							"key": "orders",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
