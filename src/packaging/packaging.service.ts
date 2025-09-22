@@ -7,8 +7,8 @@ export type BoxType = 'BOX_1' | 'BOX_2' | 'BOX_3';
 
 interface BoxDef {
   type: BoxType;
-  dims: [number, number, number]; // [h, w, l] cm
-  volume: number; // cm^3
+  dims: [number, number, number];
+  volume: number;
 }
 
 @Injectable()
@@ -34,13 +34,11 @@ export class PackagingService {
 
   private packSingleOrder(order: OrderDto): BoxUsageDto[] {
     const products = [...order.products];
-    // Ordena por volume decrescente (First-Fit Decreasing)
     products.sort((a, b) => this.volumeOf(b) - this.volumeOf(a));
 
     const packed: BoxUsageDto[] = [];
 
     for (const p of products) {
-      // tenta colocar em alguma caixa já aberta
       let placed = false;
       for (const box of packed) {
         if (this.canPlaceInBox(p, box)) {
@@ -51,7 +49,6 @@ export class PackagingService {
       }
       if (placed) continue;
 
-      // abre uma nova caixa do menor tipo possível que caiba o produto
       const boxType = this.findSmallestFittingBox(p);
       if (!boxType) {
         throw new BadRequestException(
@@ -68,8 +65,6 @@ export class PackagingService {
       packed.push(newBox);
     }
 
-    // Heurística para tentar reduzir número de caixas: ordenar caixas por folga de volume
-    // (Passo simples, sem reempacotar produtos já posicionados.)
     packed.sort(
       (a, b) => this.freeVolume(b) - this.freeVolume(a),
     );
@@ -85,7 +80,6 @@ export class PackagingService {
     const boxDims = [...box.boxDimensions].sort((x, y) => x - y);
     const orientations: [number, number, number][] = this.getOrientations(p);
 
-    // checa se o produto cabe nas dimensões da caixa (com rotação)
     const fitsDimension = orientations.some((o) => {
       const sorted = [...o].sort((x, y) => x - y);
       return (
